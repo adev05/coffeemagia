@@ -4,7 +4,6 @@ import {
 	Card,
 	CardContent,
 	CardFooter,
-	CardHeader,
 	CardTitle,
 	CardDescription,
 } from '@/components/ui/card'
@@ -24,20 +23,18 @@ export function MenuCard({ product }: MenuCardProps) {
 	return (
 		<>
 			<Card
-				className='cursor-pointer transition-shadow'
+				className='cursor-pointer transition-shadow pt-0 gap-4'
 				onClick={() => setIsDialogOpen(true)}
 			>
-				<CardHeader className='relative h-48 overflow-hidden p-0'>
-					<Image
-						src={product.image}
-						alt={product.name}
-						fill
-						className='object-cover rounded-t-lg'
-						sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw'
-					/>
-				</CardHeader>
-				<CardContent className='pt-4'>
-					<CardTitle className='text-lg'>{product.name}</CardTitle>
+				<Image
+					src={product.image}
+					alt={product.name}
+					width={800}
+					height={200}
+					className='rounded-2xl aspect-3/2'
+				/>
+				<CardContent>
+					<CardTitle className='text-xl'>{product.name}</CardTitle>
 					<CardDescription>{product.volume}</CardDescription>
 					<p className='text-xl font-semibold mt-2'>{product.price} ₽</p>
 				</CardContent>
