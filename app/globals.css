@@ -123,6 +123,9 @@
 }
 
 @layer base {
+	:root {
+		--font-montserrat: 'Montserrat', sans-serif;
+	}
 	* {
 		@apply border-border outline-ring/50;
 	}
