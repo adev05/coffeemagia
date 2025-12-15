@@ -61,7 +61,6 @@ export default function Home() {
 						})}
 					</div>
 				</TabsContent>
-				<TabsContent value='2'>Change your password here.</TabsContent>
 			</Tabs>
 		</div>
 	)
