@@ -6,17 +6,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-
-interface Product {
-	id: string
-	name: string
-	description: string
-	volume: string
-	price: number
-	image: string
-}
+import { AddToCartButton } from './add-to-cart-button'
+import type { Product } from '@/types/product'
 
 interface ProductDialogProps {
 	product: Product
@@ -48,9 +40,7 @@ export function ProductDialog({
 					<p className='text-2xl font-bold pt-4'>{product.price} ₽</p>
 				</DialogHeader>
 				<DialogFooter>
-					<Button variant='secondary' className='w-full' size='lg'>
-						Добавить в корзину
-					</Button>
+					<AddToCartButton product={product} className='w-full' />
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

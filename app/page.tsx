@@ -1,11 +1,26 @@
 import { SearchBar } from '@/components/menu/search-bar'
 import { MenuTabs } from '@/components/menu/menu-tabs'
+import { getProducts } from '@/lib/api'
 
-export default function Home() {
+interface PageProps {
+	searchParams: Promise<{
+		search?: string
+		tab?: string
+	}>
+}
+
+export default async function Home({ searchParams }: PageProps) {
+	const params = await searchParams
+	const search = params.search || ''
+	const tab = params.tab || '1'
+
+	// Получаем данные на сервере
+	const products = await getProducts(tab, search)
+
 	return (
 		<div className='container mx-auto flex flex-col gap-6 py-6 px-4'>
-			<SearchBar />
-			<MenuTabs />
+			<SearchBar initialSearch={search} />
+			<MenuTabs initialTab={tab} products={products} />
 		</div>
 	)
 }

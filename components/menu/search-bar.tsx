@@ -1,15 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search } from 'lucide-react'
+import { Search, Loader2 } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-export function SearchBar() {
-	const [searchQuery, setSearchQuery] = useState('')
+interface SearchBarProps {
+	initialSearch?: string
+}
+
+export function SearchBar({ initialSearch = '' }: SearchBarProps) {
+	const router = useRouter()
+	const searchParams = useSearchParams()
+	const [searchQuery, setSearchQuery] = useState(initialSearch)
+	const [isPending, startTransition] = useTransition()
 
 	const handleSearch = () => {
-		console.log('Поиск:', searchQuery)
+		const params = new URLSearchParams(searchParams.toString())
+
+		if (searchQuery) {
+			params.set('search', searchQuery)
+		} else {
+			params.delete('search')
+		}
+
+		startTransition(() => {
+			router.push(`/?${params.toString()}`)
+		})
+	}
+
+	const handleKeyDown = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter') {
+			handleSearch()
+		}
 	}
 
 	return (
@@ -19,15 +43,20 @@ export function SearchBar() {
 				placeholder='Поиск по названию'
 				value={searchQuery}
 				onChange={e => setSearchQuery(e.target.value)}
-				onKeyDown={e => e.key === 'Enter' && handleSearch()}
+				onKeyDown={handleKeyDown}
 			/>
 			<Button
 				variant='default'
 				size='lg'
 				className='lg:col-span-1'
 				onClick={handleSearch}
+				disabled={isPending}
 			>
-				<Search className='w-4 h-4 mr-2' />
+				{isPending ? (
+					<Loader2 className='w-4 h-4 mr-2 animate-spin' />
+				) : (
+					<Search className='w-4 h-4 mr-2' />
+				)}
 				Поиск
 			</Button>
 		</div>

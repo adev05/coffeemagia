@@ -7,7 +7,8 @@ import { ModeToggle } from '@/components/shared/mode-toggle'
 import { useCartStore } from '@/store/cart-store'
 
 export function Header() {
-	const cartItemsCount = useCartStore(state => state.items.length)
+	const items = useCartStore(state => state.items)
+	const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0)
 
 	return (
 		<header className='w-full'>
@@ -23,7 +24,7 @@ export function Header() {
 						<ShoppingCart className='w-5 h-5' />
 						<span>Корзина</span>
 						{cartItemsCount > 0 && (
-							<span className='absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center'>
+							<span className='absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold'>
 								{cartItemsCount}
 							</span>
 						)}

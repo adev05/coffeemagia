@@ -1,5 +1,10 @@
+'use client'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { MenuCard } from '@/components/menu/menu-card'
+import { MenuCard } from './menu-card'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useTransition } from 'react'
+import type { Product } from '@/types/product'
 
 const categories = [
 	{ id: '1', name: 'Новинки и хиты' },
@@ -14,38 +19,53 @@ const categories = [
 	{ id: '10', name: 'Напитки' },
 ]
 
-const mockProducts = Array(8)
-	.fill(null)
-	.map((_, i) => ({
-		id: `product-${i}`,
-		name: 'Мокачино',
-		description:
-			'Классика в нашем изысканном исполнении. Насыщенный эспрессо, тёмный спешелти шоколад из Никарагуа и ароматное какао из Коста-Рики.',
-		volume: '170мл',
-		price: 250,
-		image: '/mocachino.jpg',
-	}))
+interface MenuTabsProps {
+	initialTab: string
+	products: Product[]
+}
 
-export function MenuTabs() {
+export function MenuTabs({ initialTab, products }: MenuTabsProps) {
+	const router = useRouter()
+	const searchParams = useSearchParams()
+	const [isPending, startTransition] = useTransition()
+
+	const handleTabChange = (value: string) => {
+		const params = new URLSearchParams(searchParams.toString())
+		params.set('tab', value)
+
+		startTransition(() => {
+			router.push(`/?${params.toString()}`)
+		})
+	}
+
 	return (
-		<Tabs defaultValue='1' className='w-full'>
+		<Tabs value={initialTab} onValueChange={handleTabChange} className='w-full'>
 			<TabsList className='flex-wrap h-auto'>
 				{categories.map(category => (
-					<TabsTrigger key={category.id} value={category.id}>
+					<TabsTrigger
+						key={category.id}
+						value={category.id}
+						disabled={isPending}
+					>
 						{category.name}
 					</TabsTrigger>
 				))}
 			</TabsList>
 
-			{categories.map(category => (
-				<TabsContent key={category.id} value={category.id}>
+			<TabsContent value={initialTab} className='mt-6'>
+				{products.length > 0 ? (
 					<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-						{mockProducts.map(product => (
+						{products.map(product => (
 							<MenuCard key={product.id} product={product} />
 						))}
 					</div>
-				</TabsContent>
-			))}
+				) : (
+					<div className='text-center py-12 text-muted-foreground'>
+						<p className='text-lg'>Ничего не найдено</p>
+						<p className='text-sm mt-2'>Попробуйте изменить параметры поиска</p>
+					</div>
+				)}
+			</TabsContent>
 		</Tabs>
 	)
 }

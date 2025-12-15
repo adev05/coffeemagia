@@ -8,19 +8,11 @@ import {
 	CardTitle,
 	CardDescription,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import { ProductDialog } from '@/components/menu/product-dialog'
+import { ProductDialog } from './product-dialog'
+import { AddToCartButton } from './add-to-cart-button'
 import { useState } from 'react'
-
-interface Product {
-	id: string
-	name: string
-	description: string
-	volume: string
-	price: number
-	image: string
-}
+import type { Product } from '@/types/product'
 
 interface MenuCardProps {
 	product: Product
@@ -32,7 +24,7 @@ export function MenuCard({ product }: MenuCardProps) {
 	return (
 		<>
 			<Card
-				className='cursor-pointer hover:shadow-lg transition-shadow'
+				className='cursor-pointer transition-shadow'
 				onClick={() => setIsDialogOpen(true)}
 			>
 				<CardHeader className='relative h-48 overflow-hidden p-0'>
@@ -50,16 +42,7 @@ export function MenuCard({ product }: MenuCardProps) {
 					<p className='text-xl font-semibold mt-2'>{product.price} ₽</p>
 				</CardContent>
 				<CardFooter>
-					<Button
-						variant='secondary'
-						className='w-full'
-						size='lg'
-						onClick={e => {
-							e.stopPropagation()
-						}}
-					>
-						Добавить в корзину
-					</Button>
+					<AddToCartButton product={product} className='w-full' />
 				</CardFooter>
 			</Card>
 
