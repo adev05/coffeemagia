@@ -36,7 +36,7 @@ export function MenuCard({ product }: MenuCardProps) {
 				<CardContent>
 					<CardTitle className='text-xl'>{product.name}</CardTitle>
 					<CardDescription>{product.volume}</CardDescription>
-					<p className='text-xl font-semibold mt-2'>{product.price} ₽</p>
+					<p className='text-xl mt-2'>{product.price} ₽</p>
 				</CardContent>
 				<CardFooter>
 					<AddToCartButton product={product} className='w-full' />
