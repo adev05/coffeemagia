@@ -39,7 +39,7 @@ export function ProductDialog({
 					<DialogDescription className='text-base pt-2'>
 						{product.description}
 					</DialogDescription>
-					<p className='text-2xl font-bold pt-4'>{product.price} ₽</p>
+					<p className='text-2xl pt-4'>{product.price} ₽</p>
 				</DialogHeader>
 				<DialogFooter>
 					<AddToCartButton product={product} className='w-full' />
