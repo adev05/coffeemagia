@@ -11,7 +11,7 @@ export function Header() {
 				<div className='flex gap-2 items-center'>
 					<Button variant='ghost' size='lg'>
 						<ShoppingCart width={16} height={16} />
-						Корзина
+						<span>Корзина</span>
 					</Button>
 					<ModeToggle />
 				</div>
