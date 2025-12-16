@@ -12,7 +12,7 @@ export function Header() {
 	const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0)
 
 	return (
-		<header className='w-full border-b'>
+		<header className='w-full'>
 			<div className='container mx-auto py-4 flex items-center justify-between px-4'>
 				<Logotype />
 				<nav className='flex gap-2 items-center'>

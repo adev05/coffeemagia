@@ -32,25 +32,34 @@ const mockProducts: Product[] = [
 		image: '/mocachino.jpg',
 		category: '1',
 	},
+
+	...Array.from({ length: 200 }, (_, i) => ({
+		id: `${i + 4}`,
+		name: `Товар ${i + 4}`,
+		description: 'Описание товара для теста infinite scroll.',
+		volume: '200мл',
+		price: 200 + i * 10,
+		image: '/mocachino.jpg',
+		category: '1',
+	})),
 ]
 
-// Имитация задержки API
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export async function getProducts(
 	categoryId?: string,
-	search?: string
-): Promise<Product[]> {
-	await delay(300) // Имитация сетевой задержки
+	search?: string,
+	page: number = 1,
+	limit: number = 16
+): Promise<{ products: Product[]; hasMore: boolean; total: number }> {
+	await delay(300)
 
 	let filtered = [...mockProducts]
 
-	// Фильтрация по категории
 	if (categoryId && categoryId !== '1') {
 		filtered = filtered.filter(p => p.category === categoryId)
 	}
 
-	// Фильтрация по поисковому запросу
 	if (search) {
 		const searchLower = search.toLowerCase()
 		filtered = filtered.filter(
@@ -60,7 +69,13 @@ export async function getProducts(
 		)
 	}
 
-	return filtered
+	const total = filtered.length
+	const start = (page - 1) * limit
+	const end = start + limit
+	const products = filtered.slice(start, end)
+	const hasMore = end < total
+
+	return { products, hasMore, total }
 }
 
 export async function getProductById(id: string): Promise<Product | null> {

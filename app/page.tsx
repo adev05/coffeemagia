@@ -14,13 +14,13 @@ export default async function Home({ searchParams }: PageProps) {
 	const search = params.search || ''
 	const tab = params.tab || '1'
 
-	// Получаем данные на сервере
-	const products = await getProducts(tab, search)
+	// Получаем первую страницу (16 товаров)
+	const { products } = await getProducts(tab, search, 1, 16)
 
 	return (
 		<div className='container mx-auto flex flex-col gap-6 py-6 px-4'>
 			<SearchBar initialSearch={search} />
-			<MenuTabs initialTab={tab} products={products} />
+			<MenuTabs initialTab={tab} initialProducts={products} />
 		</div>
 	)
 }
