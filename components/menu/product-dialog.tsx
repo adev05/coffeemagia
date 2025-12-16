@@ -24,16 +24,14 @@ export function ProductDialog({
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className='max-w-2xl'>
-				<div className='relative w-full aspect-video bg-muted rounded-lg overflow-hidden'>
-					<Image
-						src={product.image}
-						alt={product.name}
-						fill
-						className='object-cover'
-						style={{ objectFit: 'cover' }}
-						priority
-					/>
-				</div>
+				<Image
+					src={product.image}
+					alt={product.name}
+					width={462}
+					height={308}
+					className='rounded-2xl aspect-3/2'
+					priority
+				/>
 				<DialogHeader>
 					<DialogTitle className='text-2xl'>{product.name}</DialogTitle>
 					<DialogDescription className='text-base pt-2'>

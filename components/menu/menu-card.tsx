@@ -32,13 +32,14 @@ export function MenuCard({ product }: MenuCardProps) {
 					width={800}
 					height={200}
 					className='rounded-2xl aspect-3/2'
+					priority
 				/>
 				<CardContent>
 					<CardTitle className='text-xl'>{product.name}</CardTitle>
 					<CardDescription>{product.volume}</CardDescription>
 					<p className='text-xl mt-2'>{product.price} ₽</p>
 				</CardContent>
-				<CardFooter>
+				<CardFooter className='mt-auto'>
 					<AddToCartButton product={product} className='w-full' />
 				</CardFooter>
 			</Card>

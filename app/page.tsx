@@ -12,10 +12,10 @@ interface PageProps {
 export default async function Home({ searchParams }: PageProps) {
 	const params = await searchParams
 	const search = params.search || ''
-	const tab = params.tab || '1'
+	const tab = params.tab || 'Кофе'
 
-	// Получаем первую страницу (16 товаров)
-	const { products } = await getProducts(tab, search, 1, 16)
+	// Получаем первую страницу (12 товаров)
+	const { products } = await getProducts(tab, search, 1, 12)
 
 	return (
 		<div className='container mx-auto flex flex-col gap-6 py-6 px-4'>

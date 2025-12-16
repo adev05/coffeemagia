@@ -5,21 +5,26 @@ import { MenuCard } from './menu-card'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { getProducts } from '@/lib/api'
-import { Loader2 } from 'lucide-react'
 import type { Product } from '@/types/product'
 import { Spinner } from '../ui/spinner'
 
 const categories = [
-	{ id: '1', name: 'Новинки и хиты' },
-	{ id: '2', name: 'Закуски и салаты' },
-	{ id: '3', name: 'Горячие блюда' },
-	{ id: '4', name: 'Ужин' },
-	{ id: '5', name: 'Бургеры и не только' },
-	{ id: '6', name: 'Для компании' },
-	{ id: '7', name: 'Супы' },
-	{ id: '8', name: 'Десерты' },
-	{ id: '9', name: 'Кофе' },
-	{ id: '10', name: 'Напитки' },
+	{ id: 'Кофе', name: 'Кофе' },
+	{ id: 'Айс Кофе', name: 'Айс Кофе' },
+	{ id: 'Чай', name: 'Чай' },
+	{ id: 'Холодные напитки', name: 'Холодные напитки' },
+	{ id: 'Детское меню', name: 'Детское меню' },
+	{ id: 'Весовой чай и кофе в зёрнах', name: 'Весовой чай и кофе в зёрнах' },
+	{ id: 'Кулинария', name: 'Кулинария' },
+	{ id: 'Новинки и хиты', name: 'Новинки и хиты' },
+	{ id: 'Закуски и салаты', name: 'Закуски и салаты' },
+	{ id: 'Горячие блюда', name: 'Горячие блюда' },
+	{ id: 'Ужин', name: 'Ужин' },
+	{ id: 'Бургеры и не только', name: 'Бургеры и не только' },
+	{ id: 'Для компании', name: 'Для компании' },
+	{ id: 'Супы', name: 'Супы' },
+	{ id: 'Начинки и соусы', name: 'Начинки и соусы' },
+	{ id: 'Десерты и йогурт', name: 'Десерты и йогурт' },
 ]
 
 interface MenuTabsProps {
