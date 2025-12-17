@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, Loader2 } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
+import { X } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface SearchBarProps {
 	initialSearch?: string
@@ -14,51 +16,77 @@ export function SearchBar({ initialSearch = '' }: SearchBarProps) {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const [searchQuery, setSearchQuery] = useState(initialSearch)
-	const [isPending, startTransition] = useTransition()
+	const [isSearching, setIsSearching] = useState(false)
 
-	const handleSearch = () => {
+	const debouncedSearch = useDebouncedCallback((value: string) => {
+		const params = new URLSearchParams(searchParams.toString())
+
+		if (value) {
+			params.set('search', value)
+			params.set('tab', 'all')
+		} else {
+			params.delete('search')
+			if (!params.get('tab')) {
+				params.set('tab', 'all')
+			}
+		}
+
+		router.push(`/?${params.toString()}`)
+		setIsSearching(false)
+	}, 500)
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value
+		setSearchQuery(value)
+		setIsSearching(true)
+		debouncedSearch(value)
+	}
+
+	const handleClear = () => {
+		setSearchQuery('')
+		setIsSearching(false)
+		const params = new URLSearchParams(searchParams.toString())
+		params.delete('search')
+		if (!params.get('tab')) {
+			params.set('tab', 'all')
+		}
+		router.push(`/?${params.toString()}`)
+	}
+
+	const handleSubmit = () => {
 		const params = new URLSearchParams(searchParams.toString())
 
 		if (searchQuery) {
 			params.set('search', searchQuery)
+			params.set('tab', 'all')
 		} else {
 			params.delete('search')
 		}
 
-		startTransition(() => {
-			router.push(`/?${params.toString()}`)
-		})
-	}
-
-	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			handleSearch()
-		}
+		router.push(`/?${params.toString()}`)
 	}
 
 	return (
-		<div className='grid sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center'>
+		<div className='w-full relative'>
 			<Input
-				className='lg:col-span-3'
 				placeholder='Поиск по названию'
 				value={searchQuery}
-				onChange={e => setSearchQuery(e.target.value)}
-				onKeyDown={handleKeyDown}
+				onChange={handleChange}
+				onKeyDown={e => e.key === 'Enter' && handleSubmit()}
 			/>
-			<Button
-				variant='default'
-				size='lg'
-				className='lg:col-span-1'
-				onClick={handleSearch}
-				disabled={isPending}
-			>
-				{isPending ? (
-					<Loader2 className='w-4 h-4 mr-2 animate-spin' />
-				) : (
-					<Search className='w-4 h-4 mr-2' />
+			<div className='absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1'>
+				{isSearching && <Spinner className='mr-1.5' />}
+				{searchQuery && !isSearching && (
+					<Button
+						variant='ghost'
+						size='icon'
+						className='h-7 w-7'
+						onClick={handleClear}
+					>
+						<X className='h-4 w-4' />
+					</Button>
 				)}
-				Поиск
-			</Button>
+			</div>
 		</div>
 	)
 }

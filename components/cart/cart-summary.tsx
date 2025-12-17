@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import {
 	Card,
 	CardContent,
@@ -7,7 +8,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useCartStore } from '@/store/cart-store'
 import { ShoppingCart } from 'lucide-react'

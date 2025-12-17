@@ -1,6 +1,5 @@
 import { Product } from '@/types/product'
 
-// Моковые данные
 const mockProducts: Product[] = [
 	{
 		id: '7968',
@@ -3040,13 +3039,13 @@ export async function getProducts(
 	categoryId?: string,
 	search?: string,
 	page: number = 1,
-	limit: number = 12
+	limit: number = 16
 ): Promise<{ products: Product[]; hasMore: boolean; total: number }> {
 	await delay(300)
 
 	let filtered = [...mockProducts]
 
-	if (categoryId && categoryId !== 'Кофе') {
+	if (categoryId && categoryId !== 'all') {
 		filtered = filtered.filter(p => p.category === categoryId)
 	}
 

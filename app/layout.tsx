@@ -1,8 +1,8 @@
-import type { Metadata } from 'next'
-import { Montserrat } from 'next/font/google'
-import './globals.css'
+import '@/app/globals.css'
 import { Header } from '@/components/layout/header'
 import { ThemeProvider } from '@/components/providers/theme-provider'
+import type { Metadata } from 'next'
+import { Montserrat } from 'next/font/google'
 
 const montserrat = Montserrat({
 	variable: '--font-montserrat',
@@ -12,8 +12,8 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-	title: 'Кофемагия - Ресторан',
-	description: 'Лучший кофе и вкусная еда в вашем городе',
+	title: 'Кофемагия - Меню',
+	description: 'Меню ресторана',
 }
 
 export default function RootLayout({

@@ -2,7 +2,7 @@ import { CartContent } from '@/components/cart/cart-content'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-	title: 'Корзина - Кофемагия',
+	title: 'Кофемагия - Корзина',
 	description: 'Оформление заказа',
 }
 

@@ -1,10 +1,11 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { Logotype } from '@/components/shared/logotype'
-import { ShoppingCart } from 'lucide-react'
 import { ModeToggle } from '@/components/shared/mode-toggle'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/store/cart-store'
+import { ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 
 export function Header() {
@@ -27,9 +28,7 @@ export function Header() {
 							<ShoppingCart className='w-5 h-5' />
 							<span>Корзина</span>
 							{cartItemsCount > 0 && (
-								<span className='absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold'>
-									{cartItemsCount}
-								</span>
+								<Badge variant='secondary'>{cartItemsCount}</Badge>
 							)}
 						</Link>
 					</Button>

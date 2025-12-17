@@ -1,9 +1,9 @@
 'use client'
 
-import { useCartStore } from '@/store/cart-store'
 import { CartItem } from '@/components/cart/cart-item'
 import { CartSummary } from '@/components/cart/cart-summary'
 import { Button } from '@/components/ui/button'
+import { useCartStore } from '@/store/cart-store'
 import { ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 

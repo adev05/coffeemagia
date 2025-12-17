@@ -1,5 +1,5 @@
-import { SearchBar } from '@/components/menu/search-bar'
 import { MenuTabs } from '@/components/menu/menu-tabs'
+import { SearchBar } from '@/components/menu/search-bar'
 import { getProducts } from '@/lib/api'
 
 interface PageProps {
@@ -12,10 +12,10 @@ interface PageProps {
 export default async function Home({ searchParams }: PageProps) {
 	const params = await searchParams
 	const search = params.search || ''
-	const tab = params.tab || 'Кофе'
+	const tab = params.tab || 'all'
+	const categoryToLoad = search ? 'all' : tab
 
-	// Получаем первую страницу (12 товаров)
-	const { products } = await getProducts(tab, search, 1, 12)
+	const { products } = await getProducts(categoryToLoad, search, 1, 16)
 
 	return (
 		<div className='container mx-auto flex flex-col gap-6 py-6 px-4'>

@@ -1,3 +1,4 @@
+import { AddToCartButton } from '@/components/menu/add-to-cart-button'
 import {
 	Dialog,
 	DialogContent,
@@ -6,9 +7,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import Image from 'next/image'
-import { AddToCartButton } from './add-to-cart-button'
 import type { Product } from '@/types/product'
+import Image from 'next/image'
 
 interface ProductDialogProps {
 	product: Product
@@ -40,7 +40,7 @@ export function ProductDialog({
 					<p className='text-2xl pt-4'>{product.price} ₽</p>
 				</DialogHeader>
 				<DialogFooter>
-					<AddToCartButton product={product} className='w-full' />
+					<AddToCartButton product={product} />
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

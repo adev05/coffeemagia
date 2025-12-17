@@ -1,14 +1,16 @@
 'use client'
 
+import { MenuCard } from '@/components/menu/menu-card'
+import { Badge } from '@/components/ui/badge'
+import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { MenuCard } from './menu-card'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
 import { getProducts } from '@/lib/api'
 import type { Product } from '@/types/product'
-import { Spinner } from '../ui/spinner'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 const categories = [
+	{ id: 'all', name: 'Все' },
 	{ id: 'Кофе', name: 'Кофе' },
 	{ id: 'Айс Кофе', name: 'Айс Кофе' },
 	{ id: 'Чай', name: 'Чай' },
@@ -43,21 +45,22 @@ export function MenuTabs({ initialTab, initialProducts }: MenuTabsProps) {
 
 	const search = searchParams.get('search') || ''
 
-	// Сброс при смене табов или поиска
+	const activeTab = search ? 'all' : initialTab
+
 	useEffect(() => {
 		setProducts(initialProducts)
 		setPage(1)
 		setHasMore(true)
-	}, [initialTab, search, initialProducts])
+	}, [activeTab, search, initialProducts])
 
-	// Загрузка следующей страницы
-	const loadMore = async () => {
+	const loadMore = useCallback(async () => {
 		if (isLoading || !hasMore) return
 
 		setIsLoading(true)
 		try {
 			const nextPage = page + 1
-			const result = await getProducts(initialTab, search, nextPage, 16)
+			const categoryToLoad = search ? 'all' : initialTab
+			const result = await getProducts(categoryToLoad, search, nextPage, 16)
 			setProducts(prev => [...prev, ...result.products])
 			setPage(nextPage)
 			setHasMore(result.hasMore)
@@ -66,9 +69,8 @@ export function MenuTabs({ initialTab, initialProducts }: MenuTabsProps) {
 		} finally {
 			setIsLoading(false)
 		}
-	}
+	}, [hasMore, initialTab, isLoading, page, search])
 
-	// Intersection Observer для автозагрузки
 	useEffect(() => {
 		const observer = new IntersectionObserver(
 			entries => {
@@ -89,25 +91,44 @@ export function MenuTabs({ initialTab, initialProducts }: MenuTabsProps) {
 				observer.unobserve(currentTarget)
 			}
 		}
-	}, [hasMore, isLoading, page])
+	}, [hasMore, isLoading, loadMore])
 
 	const handleTabChange = (value: string) => {
 		const params = new URLSearchParams(searchParams.toString())
+
+		if (value !== 'all') {
+			params.delete('search')
+		}
+
 		params.set('tab', value)
 		router.push(`/?${params.toString()}`)
 	}
 
 	return (
-		<Tabs value={initialTab} onValueChange={handleTabChange} className='w-full'>
+		<Tabs value={activeTab} onValueChange={handleTabChange} className='w-full'>
 			<TabsList className='flex-wrap h-auto'>
 				{categories.map(category => (
-					<TabsTrigger key={category.id} value={category.id}>
+					<TabsTrigger
+						key={category.id}
+						value={category.id}
+						disabled={Boolean(search && category.id !== 'all')}
+						className='relative'
+					>
 						{category.name}
+						{category.id === 'all' && search && products.length > 0 && (
+							<Badge variant='secondary'>{products.length}</Badge>
+						)}
 					</TabsTrigger>
 				))}
 			</TabsList>
 
-			<TabsContent value={initialTab} className='mt-6'>
+			<TabsContent value={activeTab} className='mt-6'>
+				{search && (
+					<div className='mb-4 text-sm text-muted-foreground'>
+						Результаты поиска по запросу: <strong>{search}</strong>
+					</div>
+				)}
+
 				{products.length > 0 ? (
 					<>
 						<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
@@ -116,23 +137,22 @@ export function MenuTabs({ initialTab, initialProducts }: MenuTabsProps) {
 							))}
 						</div>
 
-						{/* Trigger для загрузки */}
 						<div ref={observerTarget} className='flex justify-center py-8'>
 							{isLoading && (
 								<div className='flex items-center gap-2 text-muted-foreground'>
 									<Spinner />
-									{/* <span>Загрузка товаров...</span> */}
 								</div>
 							)}
-							{/* {!hasMore && products.length > 0 && (
-								<p className='text-muted-foreground'>Все товары загружены</p>
-							)} */}
 						</div>
 					</>
 				) : (
 					<div className='text-center py-12 text-muted-foreground'>
 						<p className='text-lg'>Ничего не найдено</p>
-						<p className='text-sm mt-2'>Попробуйте изменить параметры поиска</p>
+						<p className='text-sm mt-2'>
+							{search
+								? `По запросу "${search}" товары не найдены`
+								: 'Попробуйте изменить параметры поиска'}
+						</p>
 					</div>
 				)}
 			</TabsContent>

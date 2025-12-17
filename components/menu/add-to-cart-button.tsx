@@ -2,15 +2,14 @@
 
 import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/store/cart-store'
-import { Minus, Plus } from 'lucide-react'
 import type { Product } from '@/types/product'
+import { Minus, Plus } from 'lucide-react'
 
 interface AddToCartButtonProps {
 	product: Product
-	className?: string
 }
 
-export function AddToCartButton({ product, className }: AddToCartButtonProps) {
+export function AddToCartButton({ product }: AddToCartButtonProps) {
 	const { items, addItem, removeItem, updateQuantity } = useCartStore()
 
 	const cartItem = items.find(item => item.id === product.id)
@@ -39,7 +38,7 @@ export function AddToCartButton({ product, className }: AddToCartButtonProps) {
 		return (
 			<Button
 				variant='secondary'
-				className={className}
+				className='w-full'
 				size='lg'
 				onClick={handleAdd}
 			>
@@ -49,7 +48,7 @@ export function AddToCartButton({ product, className }: AddToCartButtonProps) {
 	}
 
 	return (
-		<div className={`flex items-center gap-2 ${className}`}>
+		<div className='flex items-center gap-2 w-full'>
 			<Button variant='secondary' size='icon' onClick={handleDecrease}>
 				<Minus className='h-4 w-4' />
 			</Button>

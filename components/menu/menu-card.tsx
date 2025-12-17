@@ -1,17 +1,17 @@
 'use client'
 
+import { AddToCartButton } from '@/components/menu/add-to-cart-button'
+import { ProductDialog } from '@/components/menu/product-dialog'
 import {
 	Card,
 	CardContent,
+	CardDescription,
 	CardFooter,
 	CardTitle,
-	CardDescription,
 } from '@/components/ui/card'
-import Image from 'next/image'
-import { ProductDialog } from './product-dialog'
-import { AddToCartButton } from './add-to-cart-button'
-import { useState } from 'react'
 import type { Product } from '@/types/product'
+import Image from 'next/image'
+import { useState } from 'react'
 
 interface MenuCardProps {
 	product: Product
@@ -40,7 +40,7 @@ export function MenuCard({ product }: MenuCardProps) {
 					<p className='text-xl mt-2'>{product.price} ₽</p>
 				</CardContent>
 				<CardFooter className='mt-auto'>
-					<AddToCartButton product={product} className='w-full' />
+					<AddToCartButton product={product} />
 				</CardFooter>
 			</Card>
 
