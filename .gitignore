@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# OpenTelemetry / Docker volumes
+tempo-data/
+grafana-data/
+prometheus-data/

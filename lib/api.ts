@@ -1,4 +1,5 @@
 import { Product } from '@/types/product'
+import { traceOperation, setAttribute, addEvent } from '@/lib/telemetry'
 
 const mockProducts: Product[] = [
 	{
@@ -3041,33 +3042,65 @@ export async function getProducts(
 	page: number = 1,
 	limit: number = 16
 ): Promise<{ products: Product[]; hasMore: boolean; total: number }> {
-	await delay(300)
+	return traceOperation(
+		'getProducts',
+		async (span) => {
+			span.setAttribute('category', categoryId || 'all')
+			span.setAttribute('search', search || '')
+			span.setAttribute('page', page)
+			span.setAttribute('limit', limit)
 
-	let filtered = [...mockProducts]
+			await delay(300)
 
-	if (categoryId && categoryId !== 'all') {
-		filtered = filtered.filter(p => p.category === categoryId)
-	}
+			let filtered = [...mockProducts]
 
-	if (search) {
-		const searchLower = search.toLowerCase()
-		filtered = filtered.filter(
-			p =>
-				p.name.toLowerCase().includes(searchLower) ||
-				p.description.toLowerCase().includes(searchLower)
-		)
-	}
+			if (categoryId && categoryId !== 'all') {
+				addEvent('filter.category', { categoryId })
+				filtered = filtered.filter(p => p.category === categoryId)
+			}
 
-	const total = filtered.length
-	const start = (page - 1) * limit
-	const end = start + limit
-	const products = filtered.slice(start, end)
-	const hasMore = end < total
+			if (search) {
+				const searchLower = search.toLowerCase()
+				addEvent('filter.search', { query: search })
+				filtered = filtered.filter(
+					p =>
+						p.name.toLowerCase().includes(searchLower) ||
+						p.description.toLowerCase().includes(searchLower)
+				)
+			}
 
-	return { products, hasMore, total }
+			const total = filtered.length
+			const start = (page - 1) * limit
+			const end = start + limit
+			const products = filtered.slice(start, end)
+			const hasMore = end < total
+
+			span.setAttribute('results.total', total)
+			span.setAttribute('results.returned', products.length)
+			addEvent('products.filtered', { count: products.length })
+
+			return { products, hasMore, total }
+		}
+	)
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
-	await delay(200)
-	return mockProducts.find(p => p.id === id) || null
+	return traceOperation(
+		'getProductById',
+		async (span) => {
+			span.setAttribute('product.id', id)
+			
+			await delay(200)
+			const product = mockProducts.find(p => p.id === id) || null
+			
+			if (product) {
+				addEvent('product.found', { productName: product.name })
+			} else {
+				addEvent('product.not_found', { productId: id })
+			}
+			
+			span.setAttribute('product.found', !!product)
+			return product
+		}
+	)
 }
